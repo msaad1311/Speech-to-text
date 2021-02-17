@@ -6,7 +6,7 @@ with sr.Microphone() as source:
     while True:
         print("Listening!")
         stime = time.time()
-        audio=r.listen(source,phrase_time_limit=5)
+        audio=r.listen(source,phrase_time_limit=1)
         print(time.time()-stime)
         try:
             print('into the try method')
