@@ -1,12 +1,12 @@
 import speech_recognition as sr
 from pydub import AudioSegment
 
-sound = AudioSegment.from_mp3('tester_mp3.mp3')
-sound.export('tester1.wav', format="wav")
+# sound = AudioSegment.from_mp3('tester_mp3.mp3')
+# sound.export('tester1.wav', format="wav")
 
 r = sr.Recognizer()
 
-with sr.AudioFile('tester1.wav') as source:
+with sr.AudioFile('tester.wav') as source:
     audio =  r.record(source)
     
 try:    
