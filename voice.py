@@ -21,8 +21,8 @@ while True:
     init_rec = sr.Recognizer()
     print("Let's speak!!")
     with sr.Microphone() as source:
-        audio_data = init_rec.record(source, duration=1)
+        audio_data = init_rec.listen(source)
         # print(audio_data)
         print("Recognizing your text.............")
-        text = init_rec.recognize_google(audio_data,show_all=True)
+        text = init_rec.recognize_google(audio_data)
         print(text)
