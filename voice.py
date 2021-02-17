@@ -1,9 +1,9 @@
 import speech_recognition as sr
 import time
 
-r=sr.Recognizer()
-with sr.Microphone() as source:
-    while True:
+while True:
+    r=sr.Recognizer()
+    with sr.Microphone() as source:
         print("Listening!")
         stime = time.time()
         audio=r.listen(source,phrase_time_limit=1)
