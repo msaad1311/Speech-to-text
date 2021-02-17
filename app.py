@@ -1,3 +1,4 @@
+# https://stackoverflow.com/questions/51079338/audio-livestreaming-with-python-flask
 from flask import Flask, Response,render_template
 import speech_recognition as sr
 import pyaudio
@@ -6,7 +7,7 @@ import soundfile as sf
 from pydub import AudioSegment
 import numpy as np
 import os
-from scipy.io.wavfile import write
+# from scipy.io.wavfile import write
 
 app = Flask(__name__)
 
@@ -20,7 +21,15 @@ init_rec = sr.Recognizer()
 
 audio1 = pyaudio.PyAudio()
 
-
+def write(f, sr, x, normalized=False):
+    """numpy array to MP3"""
+    channels = 2 if (x.ndim == 2 and x.shape[1] == 2) else 1
+    if normalized:  # normalized array - each item should be a float in [-1, 1)
+        y = np.int16(x * 2 ** 15)
+    else:
+        y = np.int16(x)
+    song = pydub.AudioSegment(y.tobytes(), frame_rate=sr, sample_width=2, channels=channels)
+    song.export(f, format="mp3")
 
 def genHeader(sampleRate, bitsPerSample, channels):
     print('into genHeader')
@@ -48,14 +57,6 @@ def soundplot(stream):
 def audio():
     # start Recording
     def sound():
-
-        # CHUNK = 1024
-        # sampleRate = 16000
-        # bitsPerSample = 16
-        # channels = 1
-        # duration = 2
-        # wav_header = genHeader(sampleRate, bitsPerSample, channels)
-
         stream = audio1.open(format=FORMAT, channels=CHANNELS,
                         rate=RATE, input=True,
                         frames_per_buffer=CHUNK)
@@ -70,11 +71,13 @@ def audio():
         print(type(data))
         try:
             print('into the try catch of saving')
-            write('tester.wav',16000,data)
+            write('tester.mp3',16000,data)
         except:
             pass
+        sound = AudioSegment.from_mp3('tester.mp3')
+        sound.export('tester2.wav', format="wav")
         print('starting to reuse')
-        with sr.AudioFile('tester.wav') as source:
+        with sr.AudioFile('tester2.wav') as source:
             print('into the reusable')
             data= init_rec.record(source)
             try:
