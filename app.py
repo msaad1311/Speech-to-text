@@ -11,7 +11,7 @@ from scipy.io.wavfile import write
 app = Flask(__name__)
 
 
-FORMAT = pyaudio.paInt16
+FORMAT = pyaudio.paFloat32
 CHANNELS = 1
 RATE = 16000
 CHUNK = int(RATE/20)
@@ -57,7 +57,7 @@ def audio():
         # wav_header = genHeader(sampleRate, bitsPerSample, channels)
 
         stream = audio1.open(format=FORMAT, channels=CHANNELS,
-                        rate=RATE, input=True,input_device_index=1,
+                        rate=RATE, input=True,
                         frames_per_buffer=CHUNK)
         print("recording...")
         frames = []
