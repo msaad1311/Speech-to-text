@@ -31,37 +31,37 @@ def soundplot(stream):
 @app.route('/audio')
 def audio():
     # start Recording
-    def sound():
-        stream = audio1.open(format=FORMAT, channels=CHANNELS,
-                        rate=RATE, input=True,input_device_index=1,
-                        frames_per_buffer=CHUNK)
-        print("recording...")
-        frames = []
-        for i in range(0,int(RATE/CHUNK * RECORD_SECONDS)):
-            if i%10==0: print(i) 
-            frames.append(soundplot(stream)) 
-        data= np.array(frames).reshape(-1)
-        print(type(data))
+    stream = audio1.open(format=FORMAT, channels=CHANNELS,
+                    rate=RATE, input=True,input_device_index=1,
+                    frames_per_buffer=CHUNK)
+    print("recording...")
+    frames = []
+    for i in range(0,int(RATE/CHUNK * RECORD_SECONDS)):
+        if i%10==0: print(i) 
+        frames.append(soundplot(stream)) 
+    data= np.array(frames).reshape(-1)
+    print(type(data))
+    try:
+        print('into the try catch of saving')
+        write('tester.wav',RATE,data)
+    except Exception as e:
+        print("Exception while saving the file: "+str(e))
+    print('starting to reuse')
+    with sr.AudioFile('tester.wav') as source:
+        print('into the reusable')
+        data= init_rec.record(source)
+        print(data)
         try:
-            print('into the try catch of saving')
-            write('tester.wav',RATE,data)
+            text = init_rec.recognize_google(data)
+            os.remove('tester.wav')
+            print(text)
+            return render_template('result.html')
         except Exception as e:
-            print("Exception while saving the file: "+str(e))
-        print('starting to reuse')
-        with sr.AudioFile('tester.wav') as source:
-            print('into the reusable')
-            data= init_rec.record(source)
-            print(data)
-            try:
-                text = init_rec.recognize_google(data)
-                print(text)
-                yield(text)
-            except Exception as e:
-                print("Exception: "+str(e))
-        os.remove('tester.wav')
-        
+            print("Exception: "+str(e))
+    
+    
 
-    return Response(sound())
+return Response(sound())
 
 @app.route('/')
 def index():
