@@ -9,9 +9,10 @@ from pydub import AudioSegment
 import numpy as np
 import os
 from scipy.io.wavfile import write
+from googletrans import Translator
 
 app = Flask(__name__)
-
+translator = Translator()
 
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
